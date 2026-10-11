@@ -47,10 +47,11 @@ REM STEP 2: Pull Latest Repository Updates (Non-destructive)
 REM ------------------------------------------------------------------------------
 echo [STEP 2/4] Checking for Git repository updates...
 
-if not exist ".git" goto no_git_repo
-
 where git >nul 2>nul
 if errorlevel 1 goto git_missing
+
+git rev-parse --is-inside-work-tree >nul 2>nul
+if errorlevel 1 goto no_git_repo
 
 echo   Fetching latest changes from remote Git repository...
 git pull --ff-only
@@ -76,7 +77,7 @@ echo.
 goto git_done
 
 :no_git_repo
-echo   [INFO] No '.git' folder found (project was likely downloaded as a ZIP archive).
+echo   [INFO] No Git repository detected (project was likely downloaded as a ZIP archive).
 echo          Skipping git pull. To update source files from GitHub:
 echo            1. Download the latest release / ZIP from the GitHub repository.
 echo            2. Extract files into this directory (keep your existing .env file).
